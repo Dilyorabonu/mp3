@@ -5,6 +5,8 @@ const progressEl = document.getElementById("progress");
 const progressContainerEl = document.getElementById("progress-container");
 const titleEl = document.getElementById("title");
 const audioEl = document.getElementById("audio");
+const startSpan = document.getElementById("start");
+const endSpan = document.getElementById("end");
 
 //buttons
 const backwordBtn = document.getElementById("backword");
@@ -81,7 +83,31 @@ const prevSong = () => {
   play();
 };
 
+//progress
+const progress = (e) => {
+  const { duration, currentTime } = e.target;
+  const widthTime = (currentTime + 100) / duration;
+  console.log(`${widthTime}%`);
+  progressContainerEl.style.width = `${widthTime}%`;
+  let min = Math.floor(duration / 60);
+  let seconds = Math.floor(duration % 60);
+  endSpan.textContent = `${min}:${(seconds =
+    seconds < 10 ? "0" + seconds : seconds)}`;
+  let currentMin = Math.floor(currentTime / 60);
+  let currentseconds = Math.floor(currentTime % 60);
+  startSpan.textContent = `${currentMin}:${(currentseconds =
+    currentseconds < 10 ? "0" + currentseconds : currentseconds)}`;
+};
+function setProgressTime(e) {
+  const width = this.clientWidth;
+  const clientX = e.offsetX;
+  const duration = audio.duration;
+  audio.currentTime = (clientX / width) * duration;
+}
+
 //events
 playBtn.addEventListener("click", playSong);
 forwardBtn.addEventListener("click", nextSong);
 backwordBtn.addEventListener("click", prevSong);
+audioEl.addEventListener("timeupdate", progress);
+progressEl.addEventListener("click", setProgressTime);
